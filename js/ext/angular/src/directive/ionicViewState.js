@@ -36,6 +36,7 @@ angular.module('ionic.ui.viewState', ['ionic.service.view', 'ionic.service.gestu
       backIcon: '@backButtonIcon',
       alignTitle: '@'
     },
+    controller: function() {},
     template:
     '<header class="bar bar-header nav-bar{{navBarClass()}}">' +
       '<nav-back-button ng-if="backButtonEnabled && (backType || backLabel || backIcon)" ' +
@@ -49,7 +50,7 @@ angular.module('ionic.ui.viewState', ['ionic.service.view', 'ionic.service.gestu
       '</div>' +
 
       //ng-repeat makes it easy to add new / remove old and have proper enter/leave anims
-      '<h1 ng-repeat="title in titles" bind-html-unsafe="title" class="title invisible" async-visible>' +
+      '<h1 ng-repeat="title in titles" bind-html-unsafe="title" class="title invisible" async-visible nav-bar-title>' +
 
       '<div class="buttons" ng-if="rightButtons.length"> ' +
       '<button ng-click="button.tap($event)" ng-repeat="button in rightButtons" '+
@@ -127,18 +128,23 @@ angular.module('ionic.ui.viewState', ['ionic.service.view', 'ionic.service.gestu
           $scope.titles.push(newTitle);
           $scope.leftButtons = data.leftButtons;
           $scope.rightButtons = data.rightButtons;
-
-          if ($scope.animation && !animationDisabled && $animate.enabled()) {
-            //Be sure to align the entering title, not the exiting one
-            hb.align('.title.ng-enter');
-          } else {
-            hb.align();
-          }
         }
       };
     }
   };
 }])
+
+.directive('navBarTitle', function() {
+  return {
+    restrict: 'A',
+    require: '^navBar',
+    link: function($scope, $element, $attr, navBarCtrl) {
+      $element.on('$animate:close', function() {
+        $scope.headerBarView && $scope.headerBarView.align();
+      });
+    }
+  };
+})
 
 /*
  * Directive to put on an element that has 'invisible' class when rendered.

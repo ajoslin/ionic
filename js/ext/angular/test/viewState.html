@@ -101,19 +101,31 @@
 
       <tabs tabs-style="tabs-icon-top" tabs-type="tabs-positive">
 
-        <tab title="Automobiles" icon="ion-model-s" href="#/tabs/autos">
+        <tab>
+          <tab-heading icon="ion-model-s" href="#/tabs/autos">
+            Models
+          </tab-heading>
           <nav-view name="auto-nav-view"></nav-view>
         </tab>
 
-        <tab title="Add" icon="ion-plus-circled" href="#/tabs/add-auto">
+        <tab>
+          <tab-heading icon="ion-plus-circled" href="#/tabs/add-auto">
+            Add
+          </tab-heading>
           <nav-view name="add-autos-nav-view"></nav-view>
         </tab>
 
-        <tab title="About" icon="ion-ios7-world" ui-sref="tabs.about">
+        <tab>
+          <tab-heading icon="ion-ios7-world" ui-sref="tabs.about">
+            About
+          </tab-heading>
           <nav-view name="about-nav-view"></nav-view>
         </tab>
 
-        <tab title="Info" icon="ion-information-circled">
+        <tab>
+          <tab-heading icon="ion-information-circled">
+            Info
+          </tab-heading>
           <view title="'Information'">
             <content has-header="true" has-tabs="true" padding="true">
               <h3>Information</h3>
@@ -129,7 +141,10 @@
           </view>
         </tab>
 
-        <tab title="Sign-Out" icon="ion-log-out" href="#/sign-in">
+        <tab>
+          <tab-heading icon="ion-log-out" href="#/sign-in">
+            Sign Out
+          </tab-heading>
         </tab>
 
       </tabs>

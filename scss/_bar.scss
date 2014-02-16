@@ -267,6 +267,10 @@
   border-bottom-width: 0;
   background-position: top;
 }
+.bar-tabsfooter {
+  bottom: $tabs-height;
+}
+
 
 // Don't render padding if the bar is just for tabs
 .bar-tabs {

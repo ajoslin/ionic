@@ -16,42 +16,57 @@ angular.module('ionic.ui.content', ['ionic.ui.service', 'ionic.ui.scroll'])
   };
 })
 
+.controller('$ionicContent', ['$scope', function($scope) {
+  this.$scope = $scope;
+}])
+
 // The content directive is a core scrollable content area
 // that is part of many View hierarchies
-.directive('content', ['$parse', '$timeout', '$ionicScrollDelegate', '$controller', function($parse, $timeout, $ionicScrollDelegate, $controller) {
+.directive('content', ['$timeout', '$controller', '$ionicBind', function($timeout, $controller, $ionicBind) {
+  var BINDINGS = {
+    onRefresh: '&',
+    onRefreshOpening: '&',
+    onScroll: '&',
+    onScrollComplete: '&',
+    refreshComplete: '=',
+    onInfiniteScroll: '=',
+    infiniteScrollDistance: '@',
+    hasBouncing: '@',
+    scroll: '=',
+    overflowScroll: '=',
+    hasScrollX: '@',
+    hasScrollY: '@',
+    scrollbarX: '@',
+    scrollbarY: '@',
+    startX: '@',
+    startY: '@',
+    scrollEventInterval: '@',
+
+    $hasHeader: '=hasHeader',
+    $hasSubheader: '=hasSubheader',
+    $hasFooter: '=hasFooter',
+    $hasTabs: '=hasTabs',
+    $hasPadding: '=padding'
+  };
   return {
     restrict: 'E',
     replace: true,
-    template: '<div class="scroll-content"><div class="scroll" ng-transclude></div></div>',
+    template:
+      '<div class="scroll-content" ng-class="{' +
+        '\'has-header\': $hasHeader, ' +
+        '\'has-subheader\': $hasSubheader, ' +
+        '\'has-footer\': $hasFooter, ' +
+        '\'has-tabs\': $hasTabs, ' +
+        '\'overflow-scroll\': overflowScroll, ' +
+        'padding: $hasPadding' +
+      '}">' +
+      '<div class="scroll" ng-transclude></div>' +
+    '</div>',
     transclude: true,
     require: '^?navView',
-    scope: {
-      onRefresh: '&',
-      onRefreshOpening: '&',
-      onScroll: '&',
-      onScrollComplete: '&',
-      refreshComplete: '=',
-      onInfiniteScroll: '=',
-      infiniteScrollDistance: '@',
-      hasBouncing: '@',
-      scroll: '@',
-      padding: '@',
-      hasScrollX: '@',
-      hasScrollY: '@',
-      scrollbarX: '@',
-      scrollbarY: '@',
-      startX: '@',
-      startY: '@',
-      scrollEventInterval: '@'
-    },
-
+    controller: '$ionicContent',
+    scope: true,
     compile: function(element, attr, transclude) {
-      if(attr.hasHeader == "true") { element.addClass('has-header'); }
-      if(attr.hasSubheader == "true") { element.addClass('has-subheader'); }
-      if(attr.hasFooter == "true") { element.addClass('has-footer'); }
-      if(attr.hasTabs == "true") { element.addClass('has-tabs'); }
-      if(attr.padding == "true") { element.find('div').addClass('padding'); }
-
       return {
         //Prelink <content> so it can compile before other directives compile.
         //Then other directives can require ionicScrollCtrl
@@ -62,12 +77,14 @@ angular.module('ionic.ui.content', ['ionic.ui.service', 'ionic.ui.scroll'])
         var clone, sc, scrollView, scrollCtrl,
           c = angular.element($element.children()[0]);
 
-        if($scope.scroll === "false") {
+        $ionicBind($scope, $attr, BINDINGS);
+
+        if($scope.scroll === false) {
           // No scrolling
           return;
         }
 
-        if(attr.overflowScroll === "true") {
+        if(attr.overflowScroll === true) {
           $element.addClass('overflow-scroll');
           return;
         }

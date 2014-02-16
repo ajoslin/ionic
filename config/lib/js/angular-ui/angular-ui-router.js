@@ -192,14 +192,14 @@ angular.module('ui.router.compat', ['ui.router']);
  */
 $Resolve.$inject = ['$q', '$injector'];
 function $Resolve(  $q,    $injector) {
-  
+
   var VISIT_IN_PROGRESS = 1,
       VISIT_DONE = 2,
       NOTHING = {},
       NO_DEPENDENCIES = [],
       NO_LOCALS = NOTHING,
       NO_PARENT = extend($q.when(NOTHING), { $$promises: NOTHING, $$values: NOTHING });
-  
+
 
   /**
    * Studies a set of invocables that are likely to be used multiple times.
@@ -214,19 +214,19 @@ function $Resolve(  $q,    $injector) {
    */
   this.study = function (invocables) {
     if (!isObject(invocables)) throw new Error("'invocables' must be an object");
-    
+
     // Perform a topological sort of invocables to build an ordered plan
     var plan = [], cycle = [], visited = {};
     function visit(value, key) {
       if (visited[key] === VISIT_DONE) return;
-      
+
       cycle.push(key);
       if (visited[key] === VISIT_IN_PROGRESS) {
         cycle.splice(0, cycle.indexOf(key));
         throw new Error("Cyclic dependency: " + cycle.join(" -> "));
       }
       visited[key] = VISIT_IN_PROGRESS;
-      
+
       if (isString(value)) {
         plan.push(key, [ function() { return $injector.get(value); }], NO_DEPENDENCIES);
       } else {
@@ -236,17 +236,17 @@ function $Resolve(  $q,    $injector) {
         });
         plan.push(key, value, params);
       }
-      
+
       cycle.pop();
       visited[key] = VISIT_DONE;
     }
     forEach(invocables, visit);
     invocables = cycle = visited = null; // plan is all that's required
-    
+
     function isResolve(value) {
       return isObject(value) && value.then && value.$$promises;
     }
-    
+
     return function (locals, parent, self) {
       if (isResolve(locals) && self === undefined) {
         self = parent; parent = locals; locals = null;
@@ -254,12 +254,12 @@ function $Resolve(  $q,    $injector) {
       if (!locals) locals = NO_LOCALS;
       else if (!isObject(locals)) {
         throw new Error("'locals' must be an object");
-      }       
+      }
       if (!parent) parent = NO_PARENT;
       else if (!isResolve(parent)) {
         throw new Error("'parent' must be a promise returned by $resolve.resolve()");
       }
-      
+
       // To complete the overall resolution, we have to wait for the parent
       // promise and for the promise for each invokable in our plan.
       var resolution = $q.defer(),
@@ -268,28 +268,28 @@ function $Resolve(  $q,    $injector) {
           values = extend({}, locals),
           wait = 1 + plan.length/3,
           merged = false;
-          
+
       function done() {
         // Merge parent values we haven't got yet and publish our own $$values
         if (!--wait) {
-          if (!merged) merge(values, parent.$$values); 
+          if (!merged) merge(values, parent.$$values);
           result.$$values = values;
           result.$$promises = true; // keep for isResolve()
           resolution.resolve(values);
         }
       }
-      
+
       function fail(reason) {
         result.$$failure = reason;
         resolution.reject(reason);
       }
-      
+
       // Short-circuit if parent has already failed
       if (isDefined(parent.$$failure)) {
         fail(parent.$$failure);
         return result;
       }
-      
+
       // Merge parent values if the parent has already resolved, or merge
       // parent promises and wait if the parent resolve is still in progress.
       if (parent.$$values) {
@@ -299,13 +299,13 @@ function $Resolve(  $q,    $injector) {
         extend(promises, parent.$$promises);
         parent.then(done, fail);
       }
-      
+
       // Process each invocable in the plan, but ignore any where a local of the same name exists.
       for (var i=0, ii=plan.length; i<ii; i+=3) {
         if (locals.hasOwnProperty(plan[i])) done();
         else invoke(plan[i], plan[i+1], plan[i+2]);
       }
-      
+
       function invoke(key, invocable, params) {
         // Create a deferred for this invocation. Failures will propagate to the resolution as well.
         var invocation = $q.defer(), waitParams = 0;
@@ -340,11 +340,11 @@ function $Resolve(  $q,    $injector) {
         // Publish promise synchronously; invocations further down in the plan may depend on it.
         promises[key] = invocation.promise;
       }
-      
+
       return result;
     };
   };
-  
+
   /**
    * Resolves a set of invocables. An invocable is a function to be invoked via `$injector.invoke()`,
    * and can have an arbitrary number of dependencies. An invocable can either return a value directly,
@@ -367,7 +367,7 @@ function $Resolve(  $q,    $injector) {
    * returned by an invocable is rejected, the `$resolve` promise is immediately rejected with the same error.
    * A rejection of a `parent` promise (if specified) will likewise be propagated immediately. Once the
    * `$resolve` promise has been rejected, no further invocables will be called.
-   * 
+   *
    * Cyclic dependencies between invocables are not permitted and will caues `$resolve` to throw an
    * error. As a special case, an injectable can depend on a parameter with the same name as the injectable,
    * which will be fulfilled from the `parent` injectable of the same name. This allows inherited values
@@ -412,7 +412,7 @@ $TemplateFactory.$inject = ['$http', '$templateCache', '$injector'];
 function $TemplateFactory(  $http,   $templateCache,   $injector) {
 
   /**
-   * Creates a template from a configuration object. 
+   * Creates a template from a configuration object.
    * @function
    * @name $templateFactory#fromConfig
    * @methodOf $templateFactory
@@ -494,7 +494,7 @@ angular.module('ui.router.util').service('$templateFactory', $TemplateFactory);
  * of search parameters. Multiple search parameter names are separated by '&'. Search parameters
  * do not influence whether or not a URL is matched, but their values are passed through into
  * the matched parameters returned by {@link UrlMatcher#exec exec}.
- * 
+ *
  * Path parameter placeholders can be specified using simple colon/catch-all syntax or curly brace
  * syntax, which optionally allows a regular expression for the parameter to be specified:
  *
@@ -505,13 +505,13 @@ angular.module('ui.router.util').service('$templateFactory', $TemplateFactory);
  *   curly braces, they must be in matched pairs or escaped with a backslash.
  *
  * Parameter names may contain only word characters (latin letters, digits, and underscore) and
- * must be unique within the pattern (across both path and search parameters). For colon 
+ * must be unique within the pattern (across both path and search parameters). For colon
  * placeholders or curly placeholders without an explicit regexp, a path parameter matches any
  * number of characters other than '/'. For catch-all placeholders the path parameter matches
  * any number of characters.
- * 
+ *
  * ### Examples
- * 
+ *
  * * '/hello/' - Matches only if the path is exactly '/hello/'. There is no special treatment for
  *   trailing slashes, and patterns have to match the entire path, not just a prefix.
  * * '/user/:id' - Matches '/user/bob' or '/user/1234!!!' or even '/user/' but not '/user' or
@@ -748,7 +748,7 @@ angular.module('ui.router.util').provider('$urlMatcherFactory', $UrlMatcherFacto
 
 $UrlRouterProvider.$inject = ['$urlMatcherFactoryProvider'];
 function $UrlRouterProvider(  $urlMatcherFactory) {
-  var rules = [], 
+  var rules = [],
       otherwise = null;
 
   // Returns a string that is a prefix of all strings matching the RegExp
@@ -1350,10 +1350,10 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory,           $
         url = "#" + $locationProvider.hashPrefix() + url;
       }
       if (options.absolute && url) {
-        url = $location.protocol() + '://' + 
-              $location.host() + 
-              ($location.port() == 80 || $location.port() == 443 ? '' : ':' + $location.port()) + 
-              (!$locationProvider.html5Mode() && url ? '/' : '') + 
+        url = $location.protocol() + '://' +
+              $location.host() +
+              ($location.port() == 80 || $location.port() == 443 ? '' : ':' + $location.port()) +
+              (!$locationProvider.html5Mode() && url ? '/' : '') +
               url;
       }
       return url;

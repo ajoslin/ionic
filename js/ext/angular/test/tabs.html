@@ -43,70 +43,57 @@
         text-decoration: line-through;
       }
     </style>
-    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="../../../../dist/js/ionic.bundle.js"></script>
   </head>
   <body ng-controller="RootCtrl">
     <tabs
-          animation="fade-in-out"
-          tabs-type="tabs-icon-only"
-          tabs-style="tabs-top tabs-positive"
-          controller-changed="onControllerChanged(oldController, oldIndex, newController, newIndex)">
+      animation="fade-in-out"
+      tabs-type="tabs-{{$root.tabStyle}} tabs-icon-only"
+      tabs-style="tabs-positive"
+      controller-changed="onControllerChanged(oldController, oldIndex, newController, newIndex)">
 
-          <tab title="<img src='http://placekitten.com/40/40'>" ng-controller="HomeCtrl">
-        <header class="bar bar-header bar-positive">
-          <button class="button button-icon icon ion-plus" ng-click="newTask()"></button>
-          <h1 class="title">Tasks</h1>
-          <button class="button button-clear" ng-click="isDeletingItems = !isDeletingItems">Edit</button>
-        </header>
-        <content has-header="true" has-subheader="true" on-refresh="onRefresh()" on-scroll="scroll(scrollTop, scrollLeft)">
+      <tab ng-controller="HomeCtrl">
+        <tab-heading>Kittens</tab-heading>
+        <nav-view name="yourface"></nav-view>
+        <header-bar type="bar-assertive">
+          Tasks
+        </header-bar>
+        <footer-bar type="bar-light">
+          <h1 class="title">You!</h1>
+        </footer-bar>
+        <content on-refresh="onRefresh()" on-scroll="scroll(scrollTop, scrollLeft)">
 
           <refresher></refresher>
-
+        <input ng-model="$root.tabStyle" placeholder="tabStyle">
           <list scroll="false"
-               on-reorder="onReorder(el, start, end)"
-               can-delete="true"
-               can-reorder="true"
-               can-swipe="true"
-               on-delete="deleteItem(item)"
-               show-delete="isDeletingItems"
-               animation="fade-out"
-               delete-icon="ion-minus-circled"
-               reorder-icon="ion-navicon">
+            on-reorder="onReorder(el, start, end)"
+            can-delete="true"
+            can-reorder="true"
+            can-swipe="true"
+            on-delete="deleteItem(item)"
+            show-delete="isDeletingItems"
+            animation="fade-out"
+            delete-icon="ion-minus-circled"
+            reorder-icon="ion-navicon">
 
-            <item ng-repeat="item in items"
-                  item="item">
+            <item ng-repeat="item in items" item="item">
               {{item.title}}
-            </list-item>
+            </item>
           </list>
           <button ng-click="goTop()">Go Top</button>
         </content>
       </tab>
 
-      <tab title="Deadlines" icon-on="icon ion-ios7-clock" icon-off="icon ion-ios7-clock-outline" badge-style="badge-light" badge="unreadDeadlines">
+      <tab>
+        <tab-heading title="Deadlines" icon-on="icon ion-ios7-clock" icon-off="icon ion-ios7-clock-outline" badge-style="badge-light" badge="unreadDeadlines">
+          Deadlines
+        </tab-heading>
+
         <header class="bar bar-header bar-positive">
           <h1 class="title">Deadlines</h1>
         </header>
-        <content has-header="true" padding="true">
+        <content padding="true">
           <h1>Deadlines</h1>
-        </content>
-      </tab>
-
-      <tab title="Settings" icon-on="icon ion-ios7-gear" icon-off="icon ion-ios7-gear-outline">
-        <header class="bar bar-header bar-positive">
-          <h1 class="title">Settings</h1>
-        </header>
-        <content has-header="true" padding="true">
-          <h1>Settings</h1>
-        </content>
-      </tab>
-
-      <tab title="Settings" icon-on="icon ion-ios7-gear" icon-off="icon ion-ios7-gear-outline">
-        <header class="bar bar-header bar-positive">
-          <h1 class="title">Settings</h1>
-        </header>
-        <content has-header="true" padding="true">
-          <h1>Settings</h1>
         </content>
       </tab>
 

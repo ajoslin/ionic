@@ -32,8 +32,8 @@ angular.module('ionic.service.view', ['ui.router', 'ionic.service.platform'])
 
     if(data.url) {
       // don't let it start with a #, messes with $location.url()
-      if(data.url.indexOf('#') === 0) {
-        data.url = data.url.replace('#', '');
+      if(data.url.charAt(0) == '#') {
+        data.url = data.url.substring(1);
       }
       if(data.url !== $location.url()) {
         // we've got a good URL, ready GO!

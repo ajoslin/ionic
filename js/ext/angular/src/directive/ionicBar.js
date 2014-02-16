@@ -9,6 +9,9 @@ angular.module('ionic.ui.header', ['ngAnimate'])
     link: function($scope, $element, $attr) {
       // We want to scroll to top when the top of this element is clicked
       $ionicScrollDelegate.tapScrollToTop($element);
+
+      //We want to let people know that we have a header here
+      $scope.$parent.$hasHeader = true;
     }
   };
 }])
@@ -18,22 +21,23 @@ angular.module('ionic.ui.header', ['ngAnimate'])
     restrict: 'E',
     replace: true,
     transclude: true,
-    template: '<header class="bar bar-header">\
-                <div class="buttons">\
-                  <button ng-repeat="button in leftButtons" class="button no-animation" ng-class="button.type" ng-click="button.tap($event, $index)" bind-html-unsafe="button.content">\
-                  </button>\
-                </div>\
-                <h1 class="title" bind-html-unsafe="title"></h1>\
-                <div class="buttons">\
-                  <button ng-repeat="button in rightButtons" class="button no-animation" ng-class="button.type" ng-click="button.tap($event, $index)" bind-html-unsafe="button.content">\
-                  </button>\
-                </div>\
-              </header>',
+    template:
+    '<header class="bar bar-header">\
+      <div class="buttons">\
+        <button ng-repeat="button in leftButtons" class="button no-animation" ng-class="button.type" ng-click="button.tap($event, $index)" bind-html-unsafe="button.content">\
+        </button>\
+      </div>\
+      <h1 class="title" ng-transclude></h1>\
+      <div class="buttons">\
+        <button ng-repeat="button in rightButtons" class="button no-animation" ng-class="button.type" ng-click="button.tap($event, $index)" bind-html-unsafe="button.content">\
+        </button>\
+      </div>\
+    </header>',
 
     scope: {
       leftButtons: '=',
       rightButtons: '=',
-      title: '=',
+      title: '@',
       type: '@',
       alignTitle: '@'
     },
@@ -66,6 +70,18 @@ angular.module('ionic.ui.header', ['ngAnimate'])
   };
 }])
 
+.directive('barFooter', function() {
+  return {
+    restrict: 'C',
+    link: function($scope, $element, $attr) {
+      $scope.$parent.$hasFooter = true;
+      $scope.$parent.$watch('$hasTabs', function(value) {
+        $element.toggleClass('bar-tabsfooter', !!value);
+      });
+    }
+  };
+})
+
 .directive('footerBar', function() {
   return {
     restrict: 'E',
@@ -80,6 +96,7 @@ angular.module('ionic.ui.header', ['ngAnimate'])
 
     link: function($scope, $element, $attr) {
       $element.addClass($scope.type);
+
     }
   };
 });

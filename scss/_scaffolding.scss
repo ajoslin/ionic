@@ -281,7 +281,11 @@ infinite-scroll.active .scroll-infinite {
 
 // Specify that a content area will have tabs
 .has-tabs {
-  bottom: 49px;
+  bottom: $tabs-height;
+}
+
+.has-tabs.has-footer {
+  bottom: $bar-height + $tabs-height;
 }
 
 // A full screen section with a solid background
