@@ -56,7 +56,7 @@ describe('Ionic Header Bar', function() {
 
   it('Should re-align the title when leftButtons change', function() {
     rootScope.leftButtons = [];
-    el = compile('<ion-header-bar left-buttons="leftButtons" align-title="right"></ion-header-bar>')(rootScope); 
+    el = compile('<ion-header-bar left-buttons="leftButtons" align-title="right"></ion-header-bar>')(rootScope);
     var headerView = el.isolateScope().headerBarView;
 
     //trigger initial align()
@@ -73,7 +73,7 @@ describe('Ionic Header Bar', function() {
 
     it('Should re-align the title when rightButtons change', function() {
     rootScope.rightButtons = [];
-    el = compile('<ion-header-bar right-buttons="rightButtons" align-title="right"></ion-header-bar>')(rootScope); 
+    el = compile('<ion-header-bar right-buttons="rightButtons" align-title="right"></ion-header-bar>')(rootScope);
     var headerView = el.isolateScope().headerBarView;
 
     //trigger initial align()
@@ -88,6 +88,6 @@ describe('Ionic Header Bar', function() {
     expect(headerView.align).toHaveBeenCalled();
   });
 
-    
+
 
 });

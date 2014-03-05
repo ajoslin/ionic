@@ -1,4 +1,4 @@
-describe('tabs', function() {
+ddescribe('tabs', function() {
 
   describe('miscellaneous', function() {
     beforeEach(module('ionic', function($provide) {

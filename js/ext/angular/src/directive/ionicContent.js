@@ -16,9 +16,10 @@ angular.module('ionic.ui.content', ['ionic.ui.service', 'ionic.ui.scroll'])
   };
 })
 
-/*
+/**
  * @ngdoc directive
  * @name ionContent
+ * @module ionic
  *
  * @description
  * The ionContent directive provides an easy to use content area that can be configured to use
@@ -197,8 +198,8 @@ function($parse, $timeout, $ionicScrollDelegate, $controller, $ionicBind) {
  * TODO make complete. Mention 'scroll.infiniteScrollComplete' event
  * Mention using ng-if if you wish to stop loading more.
  *
- * @param {expression} on-scroll What to call when the scroller reaches the bottom.
- * @param {string=} distance The distance from the bottom that the scroll must reach to trigger the on-scroll expression. Default 1%.
+ * @param {expression} on-infinite What to call when the scroller reaches the bottom.
+ * @param {string=} distance The distance from the bottom that the scroll must reach to trigger the on-infinite expression. Default 1%.
  */
 .directive('ionInfiniteScroll', ['$timeout', function($timeout) {
   return {
@@ -211,6 +212,7 @@ function($parse, $timeout, $ionicScrollDelegate, $controller, $ionicBind) {
         '</div>' +
       '</div>',
     controller: ['$scope', '$attrs', function($scope, $attrs) {
+      //These are exposed via controller mainly for testing
       this.isLoading = false;
       this.scrollView = null; //given by link function
       this.getMaxScroll = function() {

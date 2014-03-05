@@ -153,15 +153,23 @@ function($scope, $ionicViewService, $rootScope, $element) {
   return {
     restrict: 'E',
     require: ['^ionTabs', 'ionTab'],
-    replace: true,
-    transclude: 'element',
+    //transclude: 'element',
     controller: '$ionicTab',
     scope: true,
-    compile: function(element, attr, transclude) {
+    compile: function(element, attr) {
+      var navViewElement = element[0].querySelector('ion-nav-view');
+      var navViewName = navViewElement && navViewElement.getAttribute('name');
+
+      var innerHtml = element.html();
+      var contentElement = angular.element('<div class="pane">').append(element.contents());
+      element.empty();
+      
       return function link($scope, $element, $attr, ctrls) {
         var childScope, childElement, tabNavElement;
           tabsCtrl = ctrls[0],
           tabCtrl = ctrls[1];
+
+        $element.remove();
 
         $ionicBind($scope, $attr, {
           animate: '=',
@@ -172,6 +180,13 @@ function($scope, $ionicViewService, $rootScope, $element) {
           title: '@',
           uiSref: '@',
           href: '@',
+        });
+
+        tabsCtrl.add($scope);
+        $scope.$on('$destroy', function() {
+          tabsCtrl.remove($scope);
+          tabNavElement.isolateScope().$destroy();
+          tabNavElement.remove();
         });
 
         tabNavElement = angular.element(
@@ -188,12 +203,11 @@ function($scope, $ionicViewService, $rootScope, $element) {
         tabNavElement.data('$ionTabController', tabCtrl);
         tabsCtrl.$tabsElement.append($compile(tabNavElement)($scope));
 
-        tabsCtrl.add($scope);
-        $scope.$on('$destroy', function() {
-          tabsCtrl.remove($scope);
-          tabNavElement.isolateScope().$destroy();
-          tabNavElement.remove();
-        });
+        if (navViewName) {
+          $scope.navViewName = navViewName;
+          selectTabIfMatchesState();
+          $scope.$on('$stateChangeSuccess', selectTabIfMatchesState);
+        }
 
         $scope.$watch('$tabSelected', function(value) {
           if (!value) {
@@ -205,23 +219,10 @@ function($scope, $ionicViewService, $rootScope, $element) {
           childElement = null;
           if (value) {
             childScope = $scope.$new();
-            transclude(childScope, function(clone) {
-              //remove title attr to stop hover annoyance!
-              clone[0].removeAttribute('title');
-              $animate.enter(clone, tabsCtrl.$element);
-              clone.addClass('pane');
-              childElement = clone;
-            });
+            childElement = contentElement.clone(); 
+            $animate.enter(childElement, tabsCtrl.$element);
+            $compile(childElement)(childScope);
             $scope.$broadcast('tab.shown', $scope);
-          }
-        });
-
-        transclude($scope, function(clone) {
-          var navView = clone[0].querySelector('ion-nav-view');
-          if (navView) {
-            $scope.navViewName = navView.getAttribute('name');
-            selectTabIfMatchesState();
-            $scope.$on('$stateChangeSuccess', selectTabIfMatchesState);
           }
         });
 
