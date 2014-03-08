@@ -23,11 +23,11 @@ function run {
   mkdir -p release
   cp -Rf dist/* release
 
+  echo "pushing to $RELEASE_REMOTE"
   git add -A
   git commit -m "finalize-release: v$VERSION \"$CODENAME\""
   git tag -f -m "v$VERSION" v$VERSION
 
-  echo "pushing to $RELEASE_REMOTE"
   git push -q -f $RELEASE_REMOTE master
   git push -q -f $RELEASE_REMOTE v$VERSION
 

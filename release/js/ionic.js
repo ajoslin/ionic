@@ -1,26 +1,12 @@
-/*!
- * Copyright 2014 Drifty Co.
- * http://drifty.com/
- *
- * Ionic, v0.9.26
- * A powerful HTML5 mobile app framework.
- * http://ionicframework.com/
- *
- * By @maxlynch, @benjsperry, @adamdbradley <3
- *
- * Licensed under the MIT license. Please see LICENSE for more information.
- *
- */
-;
 
 // Create namespaces
 //
 window.ionic = {
   controllers: {},
   views: {},
-  version: '0.9.26'
+  version: '{{ VERSION }}'
 };
-;
+
 (function(ionic) {
 
   var bezierCoord = function (x,y) {
@@ -134,7 +120,7 @@ window.ionic = {
     }
   };
 })(ionic);
-;
+
 (function(ionic) {
 
   var readyCallbacks = [],
@@ -292,7 +278,7 @@ window.ionic = {
   ionic.requestAnimationFrame = ionic.DomUtil.requestAnimationFrame;
   ionic.animationFrameThrottle = ionic.DomUtil.animationFrameThrottle;
 })(window.ionic);
-;
+
 /**
  * ion-events.js
  *
@@ -401,7 +387,7 @@ window.ionic = {
   ionic.offGesture = function() { return ionic.EventController.offGesture.apply(ionic.EventController.offGesture, arguments); };
 
 })(window.ionic);
-;
+
 /**
   * Simple gesture controllers with some common gestures that emit
   * gesture events.
@@ -512,7 +498,7 @@ window.ionic = {
     // whatever lookup was done to find this element failed to find it
     // so we can't listen for events on it.
     if(element === null) {
-      console.error('Null element passed to gesture (element does not exist). Not listening for gesture');
+      void 0;
       return;
     }
 
@@ -1798,7 +1784,7 @@ window.ionic = {
     }
   };
 })(window.ionic);
-;
+
 (function(ionic) {
 
   ionic.Platform = {
@@ -1837,7 +1823,7 @@ window.ionic = {
 
     device: function() {
       if(window.device) return window.device;
-      if(this.isCordova()) console.error('device plugin required');
+      if(this.isCordova()) void 0;
       return {};
     },
 
@@ -1865,7 +1851,7 @@ window.ionic = {
 
           if(this.isAndroid() && version < 4.4) {
             this.grade = (version < 4 ? 'c' : 'b');
-          } 
+          }
         }
       }
     },
@@ -1961,10 +1947,10 @@ window.ionic = {
 
     showStatusBar: function(val) {
       // Only useful when run within cordova
-      this.showStatusBar = val;
+      this._showStatusBar = val;
       this.ready(function(){
         // run this only when or if the platform (cordova) is ready
-        if(ionic.Platform.showStatusBar) {
+        if(ionic.Platform._showStatusBar) {
           // they do not want it to be full screen
           StatusBar.show();
           document.body.classList.remove('status-bar-hide');
@@ -2004,7 +1990,7 @@ window.ionic = {
   // setup listeners to know when the device is ready to go
   function onWindowLoad() {
     if(ionic.Platform.isCordova()) {
-      // the window and scripts are fully loaded, and a cordova/phonegap 
+      // the window and scripts are fully loaded, and a cordova/phonegap
       // object exists then let's listen for the deviceready
       document.addEventListener("deviceready", onPlatformReady, false);
     } else {
@@ -2030,7 +2016,7 @@ window.ionic = {
   }
 
 })(window.ionic);
-;
+
 (function(window, document, ionic) {
   'use strict';
 
@@ -2038,15 +2024,27 @@ window.ionic = {
   ionic.CSS = {};
 
   (function() {
-    var keys = ['webkitTransform', 'transform', '-webkit-transform', 'webkit-transform',
+
+    // transform
+    var i, keys = ['webkitTransform', 'transform', '-webkit-transform', 'webkit-transform',
                 '-moz-transform', 'moz-transform', 'MozTransform', 'mozTransform'];
 
-    for(var i = 0; i < keys.length; i++) {
+    for(i = 0; i < keys.length; i++) {
       if(document.documentElement.style[keys[i]] !== undefined) {
         ionic.CSS.TRANSFORM = keys[i];
         break;
       }
     }
+
+    // transition
+    keys = ['webkitTransition', 'mozTransition', 'transition'];
+    for(i = 0; i < keys.length; i++) {
+      if(document.documentElement.style[keys[i]] !== undefined) {
+        ionic.CSS.TRANSITION = keys[i];
+        break;
+      }
+    }
+
   })();
 
   // classList polyfill for them older Androids
@@ -2062,12 +2060,12 @@ window.ionic = {
             for(x=0; x<arguments.length; x++) {
               fn(classes, classes.indexOf(arguments[x]), arguments[x]);
             }
-            
+
             self.className = classes.join(" ");
           };
         }
 
-        return {                    
+        return {
           add: update(function(classes, index, value) {
             ~index || classes.push(value);
           }),
@@ -2096,12 +2094,12 @@ window.ionic = {
   // polyfill use to simulate native "tap"
   ionic.tapElement = function(target, e) {
     // simulate a normal click by running the element's click method then focus on it
-    
+
     var ele = target.control || target;
 
     if(ele.disabled) return;
 
-    
+    void 0;
 
     var c = getCoordinates(e);
 
@@ -2127,7 +2125,7 @@ window.ionic = {
     }
 
     if(target.control) {
-      
+      void 0;
       return stopEvent(e);
     }
   };
@@ -2141,7 +2139,7 @@ window.ionic = {
 
     if( isRecentTap(e) ) {
       // if a tap in the same area just happened, don't continue
-      
+      void 0;
       return stopEvent(e);
     }
 
@@ -2169,13 +2167,13 @@ window.ionic = {
     if(e.target.control) {
       // this is a label that has an associated input
       // the native layer will send the actual event, so stop this one
-      
+      void 0;
       return stopEvent(e);
     }
 
     if( isRecentTap(e) ) {
       // a tap has already happened at these coordinates recently, ignore this event
-      
+      void 0;
       return stopEvent(e);
     }
 
@@ -2276,7 +2274,7 @@ window.ionic = {
   document.addEventListener('mouseup', removeClickPrevent, false);
 
 })(this, document, ionic);
-;
+
 (function(ionic) {
 
   /* for nextUid() function below */
@@ -2462,7 +2460,7 @@ window.ionic = {
   ionic.debounce = ionic.Utils.debounce;
 
 })(window.ionic);
-;
+
 (function(ionic) {
 
 ionic.Platform.ready(function() {
@@ -2484,7 +2482,7 @@ function androidKeyboardFix() {
     if (rememberedDeviceWidth !== window.innerWidth) {
       rememberedDeviceWidth = window.innerWidth;
       rememberedDeviceHeight = window.innerHeight;
-      
+      void 0;
 
     //If the height changes, and it's less than before, we have a keyboard open
     } else if (rememberedDeviceHeight !== window.innerHeight &&
@@ -2514,7 +2512,7 @@ function androidKeyboardFix() {
 }
 
 })(window.ionic);
-;
+
 (function(ionic) {
 'use strict';
   ionic.views.View = function() {
@@ -2528,8 +2526,9 @@ function androidKeyboardFix() {
   });
 
 })(window.ionic);
-;
+
 var IS_INPUT_LIKE_REGEX = /input|textarea|select/i;
+var IS_EMBEDDED_OBJECT_REGEX = /object|embed/i;
 /*
  * Scroller
  * http://github.com/zynga/scroller
@@ -3151,7 +3150,8 @@ ionic.views.Scroll = ionic.views.View.inherit({
     function shouldIgnorePress(e) {
       // Don't react if initial down happens on a form element
       return e.target.tagName.match(IS_INPUT_LIKE_REGEX) ||
-        e.target.isContentEditable;
+        e.target.isContentEditable ||
+        e.target.tagName.match(IS_EMBEDDED_OBJECT_REGEX);
     }
 
 
@@ -4604,7 +4604,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
 });
 
 })(ionic);
-;
+
 (function(ionic) {
 'use strict';
   /**
@@ -4631,7 +4631,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
   });
 
 })(ionic);
-;
+
 (function(ionic) {
 'use strict';
 
@@ -4663,7 +4663,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
       var childNodes = this.el.childNodes;
       var leftWidth = 0;
       var rightWidth = 0;
-      var isCountingRightWidth = true;
+      var isCountingRightWidth = false;
 
       // Compute how wide the left children are
       // Skip all titles (there may still be two titles, one leaving the dom)
@@ -4671,7 +4671,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
       for(i = 0; i < childNodes.length; i++) {
         c = childNodes[i];
         if (c.tagName && c.tagName.toLowerCase() == 'h1') {
-          isCountingRightWidth = false;
+          isCountingRightWidth = true;
           continue;
         }
 
@@ -4705,12 +4705,12 @@ ionic.views.Scroll = ionic.views.View.inherit({
           }
         }
       } else if(this.alignTitle == 'left') {
-        titleEl.classList.add('titleEl-left');
+        titleEl.classList.add('title-left');
         if(leftWidth > 0) {
           titleEl.style.left = (leftWidth + 15) + 'px';
         }
       } else if(this.alignTitle == 'right') {
-        titleEl.classList.add('titleEl-right');
+        titleEl.classList.add('title-right');
         if(rightWidth > 0) {
           titleEl.style.right = (rightWidth + 15) + 'px';
         }
@@ -4719,7 +4719,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
   });
 
 })(ionic);
-;
+
 (function(ionic) {
 'use strict';
 
@@ -4814,7 +4814,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
       }
 
       this._currentDrag.content.style[ionic.CSS.TRANSFORM] = 'translate3d(' + newX + 'px, 0, 0)';
-      this._currentDrag.content.style.webkitTransition = 'none';
+      this._currentDrag.content.style[ionic.CSS.TRANSITION] = 'none';
     }
   });
 
@@ -4864,7 +4864,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
       } else {
         _this._currentDrag.content.style[ionic.CSS.TRANSFORM] = 'translate3d(' + restingPoint + 'px, 0, 0)';
       }
-      _this._currentDrag.content.style[ionic.CSS.TRANSFORM] = '';
+      _this._currentDrag.content.style[ionic.CSS.TRANSITION] = '';
 
 
       // Kill the current drag
@@ -5246,7 +5246,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
   });
 
 })(ionic);
-;
+
 (function(ionic) {
 'use strict';
   /**
@@ -5298,7 +5298,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
   });
 
 })(ionic);
-;
+
 (function(ionic) {
 'use strict';
 
@@ -5317,19 +5317,15 @@ ionic.views.Scroll = ionic.views.View.inherit({
     show: function() {
       var self = this;
 
-      this.el.classList.add('active');
-
-      if(this.focusFirstInput) {
+      if(self.focusFirstInput) {
         // Let any animations run first
         window.setTimeout(function() {
           var input = self.el.querySelector('input, textarea');
           input && input.focus && input.focus();
-        }, this.focusFirstDelay);
+        }, self.focusFirstDelay);
       }
     },
     hide: function() {
-      this.el.classList.remove('active');
-
       // Unfocus all elements
       if(this.unfocusOnHide) {
         var inputs = this.el.querySelectorAll('input, textarea');
@@ -5344,7 +5340,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
   });
 
 })(ionic);
-;
+
 (function(ionic) {
 'use strict';
 
@@ -5398,7 +5394,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
   });
 
 })(ionic);
-;
+
 (function(ionic) {
 'use strict';
   /**
@@ -5437,7 +5433,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
   });
 
 })(ionic);
-;
+
 (function(ionic) {
 'use strict';
 
@@ -5509,7 +5505,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
   });
 
 })(ionic);
-;
+
 /*
  * Adapted from Swipe.js 2.0
  *
@@ -6093,7 +6089,7 @@ ionic.views.Slider = ionic.views.View.inherit({
 });
 
 })(ionic);
-;
+
 (function(ionic) {
 'use strict';
 
@@ -6318,17 +6314,47 @@ ionic.views.TabBar = ionic.views.View.inherit({
 });
 
 })(window.ionic);
-;
+
 (function(ionic) {
 'use strict';
 
   ionic.views.Toggle = ionic.views.View.inherit({
     initialize: function(opts) {
+      var self = this;
+
       this.el = opts.el;
       this.checkbox = opts.checkbox;
       this.track = opts.track;
       this.handle = opts.handle;
       this.openPercent = -1;
+      this.onChange = opts.onChange || function() {};
+
+      this.triggerThreshold = opts.triggerThreshold || 20;
+
+      this.dragStartHandler = function(e) {
+        self.dragStart(e);
+      };
+      this.dragHandler = function(e) {
+        self.drag(e);
+      };
+      this.holdHandler = function(e) {
+        self.hold(e);
+      };
+      this.releaseHandler = function(e) {
+        self.release(e);
+      };
+
+      this.dragStartGesture = ionic.onGesture('dragstart', this.dragStartHandler, this.el);
+      this.dragGesture = ionic.onGesture('drag', this.dragHandler, this.el);
+      this.dragHoldGesture = ionic.onGesture('hold', this.holdHandler, this.el);
+      this.dragReleaseGesture = ionic.onGesture('release', this.releaseHandler, this.el);
+    },
+
+    destroy: function() {
+      ionic.offGesture(this.dragStartGesture, 'dragstart', this.dragStartGesture);
+      ionic.offGesture(this.dragGesture, 'drag', this.dragGesture);
+      ionic.offGesture(this.dragHoldGesture, 'hold', this.holdHandler);
+      ionic.offGesture(this.dragReleaseGesture, 'release', this.releaseHandler);
     },
 
     tap: function(e) {
@@ -6337,18 +6363,70 @@ ionic.views.TabBar = ionic.views.View.inherit({
       }
     },
 
-    drag: function(e) {
-      var slidePageLeft = this.track.offsetLeft + (this.handle.offsetWidth / 2);
-      var slidePageRight = this.track.offsetLeft + this.track.offsetWidth - (this.handle.offsetWidth / 2);
+    dragStart: function(e) {
+      if(this.checkbox.disabled) return;
 
-      if(e.pageX >= slidePageRight - 4) {
-        this.val(true);
-      } else if(e.pageX <= slidePageLeft) {
-        this.val(false);
-      } else {
-        this.setOpenPercent( Math.round( (1 - ((slidePageRight - e.pageX) / (slidePageRight - slidePageLeft) )) * 100) );
-      }
+      this._dragInfo = {
+        width: this.el.offsetWidth,
+        left: this.el.offsetLeft,
+        right: this.el.offsetLeft + this.el.offsetWidth,
+        triggerX: this.el.offsetWidth / 2,
+        initialState: this.checkbox.checked
+      };
+
+      // Stop any parent dragging
+      e.gesture.srcEvent.preventDefault();
+
+      // Trigger hold styles
+      this.hold(e);
     },
+
+    drag: function(e) {
+      var self = this;
+      if(!this._dragInfo) { return; }
+
+      // Stop any parent dragging
+      e.gesture.srcEvent.preventDefault();
+
+      ionic.requestAnimationFrame(function(amount) {
+
+        var slidePageLeft = self.track.offsetLeft + (self.handle.offsetWidth / 2);
+        var slidePageRight = self.track.offsetLeft + self.track.offsetWidth - (self.handle.offsetWidth / 2);
+        var dx = e.gesture.deltaX;
+
+        var px = e.gesture.touches[0].pageX - self._dragInfo.left;
+        var mx = self._dragInfo.width - self.triggerThreshold;
+
+        // The initial state was on, so "tend towards" on
+        if(self._dragInfo.initialState) {
+          if(px < self.triggerThreshold) {
+            self.setOpenPercent(0);
+          } else if(px > self._dragInfo.triggerX) {
+            self.setOpenPercent(100);
+          }
+        } else {
+          // The initial state was off, so "tend towards" off
+          if(px < self._dragInfo.triggerX) {
+            self.setOpenPercent(0);
+          } else if(px > mx) {
+            self.setOpenPercent(100);
+          }
+        }
+      });
+    },
+
+    endDrag: function(e) {
+      this._dragInfo = null;
+    },
+
+    hold: function(e) {
+      this.el.classList.add('dragging');
+    },
+    release: function(e) {
+      this.el.classList.remove('dragging');
+      this.endDrag(e);
+    },
+
 
     setOpenPercent: function(openPercent) {
       // only make a change if the new open percent has changed
@@ -6367,10 +6445,6 @@ ionic.views.TabBar = ionic.views.View.inherit({
       }
     },
 
-    release: function(e) {
-      this.val( this.openPercent >= 50 );
-    },
-
     val: function(value) {
       if(value === true || value === false) {
         if(this.handle.style[ionic.CSS.TRANSFORM] !== "") {
@@ -6378,6 +6452,7 @@ ionic.views.TabBar = ionic.views.View.inherit({
         }
         this.checkbox.checked = value;
         this.openPercent = (value ? 100 : 0);
+        this.onChange && this.onChange();
       }
       return this.checkbox.checked;
     }
@@ -6385,7 +6460,7 @@ ionic.views.TabBar = ionic.views.View.inherit({
   });
 
 })(ionic);
-;
+
 (function(ionic) {
 'use strict';
   ionic.controllers.ViewController = function(options) {
@@ -6402,7 +6477,7 @@ ionic.views.TabBar = ionic.views.View.inherit({
   });
 
 })(window.ionic);
-;
+
 (function(ionic) {
 'use strict';
 
@@ -6555,7 +6630,7 @@ ionic.controllers.NavController = ionic.controllers.ViewController.inherit({
 });
 
 })(window.ionic);
-;
+
 (function(ionic) {
 'use strict';
 
@@ -6573,7 +6648,7 @@ ionic.controllers.NavController = ionic.controllers.ViewController.inherit({
       this.right = options.right;
       this.content = options.content;
       this.dragThresholdX = options.dragThresholdX || 10;
-        
+
       this._rightShowing = false;
       this._leftShowing = false;
       this._isDragging = false;
@@ -6590,7 +6665,7 @@ ionic.controllers.NavController = ionic.controllers.ViewController.inherit({
     },
     /**
      * Set the content view controller if not passed in the constructor options.
-     * 
+     *
      * @param {object} content
      */
     setContent: function(content) {
@@ -6705,17 +6780,19 @@ ionic.controllers.NavController = ionic.controllers.ViewController.inherit({
       if((this._leftShowing && amount > maxLeft) || (this._rightShowing && amount < -maxRight)) {
         return;
       }
-      
+
       this.content.setTranslateX(amount);
 
       if(amount >= 0) {
         this._leftShowing = true;
         this._rightShowing = false;
 
-        // Push the z-index of the right menu down
-        this.right && this.right.pushDown && this.right.pushDown();
-        // Bring the z-index of the left menu up
-        this.left && this.left.bringUp && this.left.bringUp();
+        if(amount > 0) {
+          // Push the z-index of the right menu down
+          this.right && this.right.pushDown && this.right.pushDown();
+          // Bring the z-index of the left menu up
+          this.left && this.left.bringUp && this.left.bringUp();
+        }
       } else {
         this._rightShowing = true;
         this._leftShowing = false;
@@ -6729,7 +6806,7 @@ ionic.controllers.NavController = ionic.controllers.ViewController.inherit({
 
     /**
      * Given an event object, find the final resting position of this side
-     * menu. For example, if the user "throws" the content to the right and 
+     * menu. For example, if the user "throws" the content to the right and
      * releases the touch, the left menu should snap open (animated, of course).
      *
      * @param {Event} e the gesture event to use for snapping
@@ -6750,7 +6827,7 @@ ionic.controllers.NavController = ionic.controllers.ViewController.inherit({
       var velocityX = e.gesture.velocityX;
       var direction = e.gesture.direction;
 
-      // Less than half, going left 
+      // Less than half, going left
       //if(ratio > 0 && ratio < 0.5 && direction == 'left' && velocityX < velocityThreshold) {
       //this.openPercentage(0);
       //}
@@ -6774,17 +6851,17 @@ ionic.controllers.NavController = ionic.controllers.ViewController.inherit({
       else if(ratio < 0.5 && direction == 'right' && velocityX < velocityThreshold) {
         this.openPercentage(-100);
       }
-      
+
       // Going right, more than half, or quickly (snap open)
       else if(direction == 'right' && ratio >= 0 && (ratio >= 0.5 || velocityX > velocityThreshold)) {
         this.openPercentage(100);
       }
-      
+
       // Going left, more than half, or quickly (span open)
       else if(direction == 'left' && ratio <= 0 && (ratio <= -0.5 || velocityX > velocityThreshold)) {
         this.openPercentage(-100);
       }
-      
+
       // Snap back for safety
       else {
         this.openPercentage(0);
@@ -6831,7 +6908,7 @@ ionic.controllers.NavController = ionic.controllers.ViewController.inherit({
   });
 
 })(ionic);
-;
+
 (function(ionic) {
 'use strict';
 
