@@ -18,7 +18,7 @@ module.exports = {
           linkInfo.title = 'TODO:' + linkInfo.title;
         }
 
-        return '<a href="/docs/angularjs/' + linkInfo.url + '">' + linkInfo.title + '</a>';
+        return '<a href="/docs/' + process.env.DOC_VERSION + '/' + linkInfo.url + '">' + linkInfo.title + '</a>';
       });
     };
   }

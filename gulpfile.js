@@ -36,8 +36,14 @@ if (IS_RELEASE_BUILD) {
 gulp.task('default', ['build']);
 gulp.task('build', ['bundle', 'sass']);
 
-gulp.task('docs', function() {
-  return dgeni('docs/docs.config.js').generateDocs();
+gulp.task('docs', function(done) {
+  var docVersion = argv['doc-version'];
+  if (!docVersion) {
+    return done(gutil.colors.cyan('docs usage') + ': gulp docs --doc-version=VERSION\n' +
+          'VERSION could be "nightly", "0.9.33", etc');
+  }
+  process.env.DOC_VERSION = docVersion;
+  dgeni('docs/docs.config.js').generateDocs().then(done);
 });
 
 var IS_WATCH = false;
