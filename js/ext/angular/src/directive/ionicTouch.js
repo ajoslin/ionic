@@ -24,8 +24,10 @@ angular.module('ionic.ui.touch', [])
     }
     return function(scope, element, clickExpr) {
       var clickHandler = $parse(clickExpr);
+      console.log('ngClick compile', element);
 
       element.on('click', function(event) {
+        console.log('ngClick click');
         scope.$apply(function() {
           clickHandler(scope, {$event: (event)});
         });

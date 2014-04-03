@@ -243,6 +243,7 @@ angular.module('ionic.service.view', ['ui.router', 'ionic.service.platform'])
         hist.stack.push(viewHistory.views[rsp.viewId]);
       }
 
+      console.log('nextViewOptions', nextViewOptions);
       if(nextViewOptions) {
         if(nextViewOptions.disableAnimate) rsp.navDirection = null;
         if(nextViewOptions.disableBack) viewHistory.views[rsp.viewId].backViewId = null;

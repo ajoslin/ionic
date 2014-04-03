@@ -11,7 +11,7 @@ angular.module('ionic.ui.popup', [])
     restrict: 'E',
     replace: true,
     template: '<div class="popup-backdrop"></div>'
-  }
+  };
 })
 
 /**
@@ -56,7 +56,7 @@ angular.module('ionic.ui.popup', [])
           return $scope.$onClose({button: button, result: result, event: event });
         }
         $scope.$onButtonTap({button: button, event: event});
-      }
+      };
     }
   };
 }]);

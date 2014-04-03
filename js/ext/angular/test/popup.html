@@ -17,6 +17,7 @@
       <button class="button button-balanced" ng-click="showPrompt()">Prompt</button>
       <button class="button button-balanced" ng-click="showPasswordPrompt()">Password Prompt</button>
       <button class="button button-positive" ng-click="showAlert()">Alert</button>
+      <button class="button-block button" ng-click="newPopup()">New Popup</button>
       <div class="list">
         <a class="item" href="#">Item</a>
         <a class="item" href="#">Item</a>
@@ -62,7 +63,7 @@
     <script>
       angular.module('ionic.example', ['ionic'])
 
-      .controller('PopupCtrl', function($scope, $timeout, $q, $ionicPopup) {
+      .controller('PopupCtrl', function($scope, $timeout, $q, $ionicPopup, $ionicPopup2) {
           $scope.showPopup = function() {
             $scope.data = {}
 
@@ -144,6 +145,23 @@
                 }, 1000);
               });
           };
+
+          $scope.newPopup = function() {
+            $ionicPopup2.show({
+              title: 'Confirm!',
+              buttons: [{
+                text: 'OK',
+                onTap: function(e) {
+                  return true;
+                }
+              }, {
+                text: 'Cancel',
+                onTap: function(e) {
+                  return true;
+                }
+              }]
+            });
+          }
       });
     </script>
   </body>

@@ -1,6 +1,19 @@
 (function(ionic) {
 'use strict';
 
+var TPL_POPUP =
+  '<div class="popup">' +
+    '<div class="popup-head">' +
+      '<h3 class="popup-title" ng-bind-html="title"></h3>' +
+      '<h5 class="popup-sub-title" ng-bind-html="subTitle" ng-if="subTitle"></h5>' +
+    '</div>' +
+    '<div class="popup-body" ng-bind-html="content" ng-if="content">' +
+    '</div>' +
+    '<div class="popup-buttons row">' +
+      '<button ng-repeat="button in buttons" ng-click="$buttonTapped(button, $event)" class="button col" ng-class="button.type || \'button-default\'" ng-bind-html="button.text"></button>' +
+    '</div>' +
+  '</div>' +
+
 angular.module('ionic.service.popup', ['ionic.service.templateLoad'])
 
 /**
@@ -110,8 +123,145 @@ angular.module('ionic.service.popup', ['ionic.service.templateLoad'])
 
 
  */
+.factory('$ionicPopup2', [
+  '$animate',
+  '$ionicTemplateLoader',
+  '$ionicBackdrop',
+  '$q',
+  '$timeout',
+  '$rootScope',
+  '$document',
+function($animate, $ionicTemplateLoader, $ionicBackdrop, $q, $timeout, $rootScope, $document) {
+  //TODO allow this to be configured
+  var config = {
+    stackPushDelay: 50
+  };
+
+  var popupStack = [];
+
+  return {
+    alert: showAlert,
+    confirm: showConfirm,
+    prompt: showPrompt,
+    show: showPopup,
+  };
+  
+  function showAlert(options) {
+    return showPopup({
+      content: options.content,
+      title: options.title,
+      buttons: [{
+        text: options.okText || 'OK',
+        type: opts.okType || 'button-positive',
+        onTap: function(e) {
+          return true;
+        }
+      }]
+    });
+  }
+  function showConfirm(options) {
+  }
+
+  function showPopup(options) {
+    options = angular.extend({
+      scope: null,
+      title: '',
+      buttons: []
+    }, options || {});
+
+    var popupPromise = $ionicTemplateLoader.compile({
+      template: TPL_POPUP,
+      scope: options.scope && options.scope.$new(),
+      appendTo: $document[0].body
+    });
+    var popupContentPromise = options.templateUrl ?
+      $ionicTemplateLoader.load(options.templateUrl) :
+      $q.when(options.template || options.content || '');
+    var popupShowDelay;
+
+    var visiblePopup = getVisiblePopup();
+    if (visiblePopup) {
+      popupShowDelay = config.stackPushDelay;
+      visiblePopup.hide();
+    } else {
+      popupShowDelay = 0;
+    }
+
+    return $timeout(angular.noop, popupShowDelay).then(function() {
+      return popupPromise;
+    }).then(function(popup) {
+      var responseDeferred = $q.defer();
+
+      var innerEl = popup.element.children();
+
+      popup.scope.title = options.title;
+      popup.scope.buttons = options.buttons,
+      popup.scope.subTitle = options.subTitle;
+
+      popupContentPromise.then(function(content) {
+        popup.scope.content = content;
+      });
+
+      popup.scope.$buttonTapped = function(button, event) {
+        var result = button.onTap && button.onTap(event);
+        event = event.originalEvent || event;
+
+        if (event.defaultPrevented || result) {
+          popup.remove();
+          responseDeferred.resolve(result);
+          return;
+        }
+        return options.onButtonTap(button, event);
+      };
+
+      popup.show = function() {
+        popup.element.removeClass('popup-hidden');
+        popup.element.addClass('popup-showing active');
+        focusLastButton(popup.element);
+        $ionicBackdrop.retain();
+      };
+      popup.hide = function(cb) {
+        ionic.requestAnimationFrame(function() {
+          if (!popup.element.hasClass('popup-hidden')) {
+            $ionicBackdrop.release();
+          }
+          popup.element.removeClass('active');
+          popup.element.addClass('popup-hidden');
+          $timeout(cb, 200, false);
+        });
+      };
+      popup.remove = function() {
+        popup.hide(function() {
+          popup.element.remove();
+          popup.scope.$destroy();
+        });
+      };
+
+      popupStack.push(popup);
+      popup.show();
+    });
+  }
+
+  function getVisiblePopup() {
+    return popupStack[popupStack.length - 1];
+  }
+
+  function focusLastButton(element) {
+    var buttons = element[0].querySelectorAll('button');
+    var lastButton = buttons[buttons.length-1];
+    if(lastButton) {
+      lastButton.focus();
+    }
+  }
+
+  function positionPopup(popup) {
+    popup.element[0].style.marginLeft = (-popup.el.offsetWidth) / 2 + 'px';
+    popup.element[0].style.marginTop = (-popup.el.offsetHeight) / 2 + 'px';
+  }
+}])
+
 .factory('$ionicPopup', ['$rootScope', '$q', '$document', '$compile', '$timeout', '$ionicTemplateLoader',
-  function($rootScope, $q, $document, $compile, $timeout, $ionicTemplateLoader) {
+function($rootScope, $q, $document, $compile, $timeout, $ionicTemplateLoader) {
 
   // TODO: Make this configurable
   var popupOptions = {

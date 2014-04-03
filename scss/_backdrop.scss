@@ -1,0 +1,34 @@
+
+$backdrop-fadein-duration: 100ms !default;
+.backdrop {
+  @include transition(all $backdrop-fadein-duration ease-out);
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: $z-index-backdrop;
+
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(0,0,0,0.4);
+
+  opacity: 1;
+  &.ng-hide {
+    opacity: 0;
+  }
+  &.ng-hide-remove,
+  &.ng-hide-add {
+    display: block !important;
+  }
+}
+.center-flex-container {
+  @include display-flex();
+  @include align-items(center);
+  @include justify-content(center);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}

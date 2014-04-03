@@ -17,6 +17,7 @@ angular.module('ionic.service', [
   'ionic.service.gesture',
   'ionic.service.loading',
   'ionic.service.modal',
+  'ionic.service.overlay',
   'ionic.service.popup',
   'ionic.service.templateLoad',
   'ionic.service.view',
