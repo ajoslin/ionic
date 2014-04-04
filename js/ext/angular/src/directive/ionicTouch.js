@@ -18,29 +18,27 @@ angular.module('ionic.ui.touch', [])
    * @private
    */
   .factory('$ionicNgClick', ['$parse', function($parse) {
-    function onTap(e) {
+    function onRelease(e) {
       // wire this up to Ionic's tap/click simulation
-      ionic.tapElement(e.target, e);
+      ionic.tap.simulateClick(e.target, e);
     }
     return function(scope, element, clickExpr) {
       var clickHandler = $parse(clickExpr);
-      console.log('ngClick compile', element);
 
       element.on('click', function(event) {
-        console.log('ngClick click');
         scope.$apply(function() {
           clickHandler(scope, {$event: (event)});
         });
       });
 
-      ionic.on("release", onTap, element[0]);
+      ionic.on("release", onRelease, element[0]);
 
       // Hack for iOS Safari's benefit. It goes searching for onclick handlers and is liable to click
       // something else nearby.
       element.onclick = function(event) { };
 
       scope.$on('$destroy', function () {
-        ionic.off("release", onTap, element[0]);
+        ionic.off("release", onRelease, element[0]);
       });
     };
   }])

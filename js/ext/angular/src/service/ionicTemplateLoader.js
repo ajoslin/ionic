@@ -35,7 +35,7 @@ function($compile, $controller, $http, $q, $rootScope, $templateCache) {
     }, options || {});
 
     var templatePromise = options.templateUrl ?
-      fetchTemplate(options.templateUrl) :
+      this.load(options.templateUrl) :
       $q.when(options.template);
 
     return templatePromise.then(function(template) {

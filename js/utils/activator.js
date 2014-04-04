@@ -5,10 +5,13 @@
   var activeElements = {};  // elements that are currently active
   var keyId = 0;            // a counter for unique keys for the above ojects
   var ACTIVATED_CLASS = 'activated';
+  var touchMoveClearTimer;
 
   ionic.activator = {
 
     start: function(e) {
+      clearTimeout(touchMoveClearTimer);
+
       // when an element is touched/clicked, it climbs up a few
       // parents to see if it is an .item or .button element
       ionic.requestAnimationFrame(function(){
@@ -39,8 +42,10 @@
           // add listeners to clear all queued/active elements onMove
           if(e.type === 'touchstart') {
             document.body.removeEventListener('mousedown', ionic.activator.start);
-            document.body.addEventListener('touchmove', clear, false);
-            setTimeout(activateElements, 85);
+            touchMoveClearTimer = setTimeout(function(){
+              document.body.addEventListener('touchmove', onTouchMove, false);
+            }, 80);
+            setTimeout(activateElements, 80);
           } else {
             document.body.addEventListener('mousemove', clear, false);
             ionic.requestAnimationFrame(activateElements);
@@ -73,12 +78,20 @@
     }
   }
 
+  function onTouchMove(e) {
+    if( ionic.tap.hasTouchScrolled(e) ) {
+      clear();
+    }
+  }
+
   function onEnd(e) {
     // clear out any active/queued elements after XX milliseconds
     setTimeout(clear, 200);
   }
 
   function clear() {
+    clearTimeout(touchMoveClearTimer);
+
     // clear out any elements that are queued to be set to active
     queueElements = {};
 

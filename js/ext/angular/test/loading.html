@@ -15,12 +15,11 @@
     <script>
       angular.module('ionic.example', ['ionic'])
 
-      .controller('LoadingCtrl', function($scope, $timeout, $ionicLoading2, $interval) {
+      .controller('LoadingCtrl', function($scope, $ionicLoading) {
         $scope.startLoading = function() {
-          window.loader = $ionicLoading2.show({
+          window.loader = $ionicLoading.show({
             content: 'Getting current location...',
-            duration: 5000,
-            showDelay: 1000
+            duration: 2000
           });
         };
       });
