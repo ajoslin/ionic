@@ -369,7 +369,14 @@ ionic.views.Scroll = ionic.views.View.inherit({
       penetrationAcceleration : 0.08,
 
       // The ms interval for triggering scroll events
-      scrollEventInterval: 50
+      scrollEventInterval: 50,
+
+      getContentWidth: function() {
+        return Math.max(self.__content.scrollWidth, self.__content.offsetWidth);
+      },
+      getContentHeight: function() {
+        return Math.max(self.__content.scrollHeight, self.__content.offsetHeight);
+      }
 		};
 
 		for (var key in options) {
@@ -381,11 +388,12 @@ ionic.views.Scroll = ionic.views.View.inherit({
     }, 1000, true);
 
     this.triggerScrollEvent = ionic.throttle(function() {
-      ionic.trigger('scroll', {
+      var detail = {
         scrollTop: self.__scrollTop,
         scrollLeft: self.__scrollLeft,
         target: self.__container
-      });
+      }
+      ionic.trigger('scroll', detail);
     }, this.options.scrollEventInterval);
 
     this.triggerScrollEndEvent = function() {
@@ -900,8 +908,8 @@ ionic.views.Scroll = ionic.views.View.inherit({
     this.setDimensions(
     	this.__container.clientWidth,
     	this.__container.clientHeight,
-    	Math.max(this.__content.scrollWidth, this.__content.offsetWidth),
-      Math.max(this.__content.scrollHeight, this.__content.offsetHeight)
+      this.options.getContentWidth(),
+      this.options.getContentHeight()
     );
   },
   /*
@@ -985,7 +993,6 @@ ionic.views.Scroll = ionic.views.View.inherit({
    * @param contentHeight {Integer} Outer height of inner element
    */
   setDimensions: function(clientWidth, clientHeight, contentWidth, contentHeight) {
-
     var self = this;
 
     // Only update values which are defined
