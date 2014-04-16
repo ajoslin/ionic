@@ -380,7 +380,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
       self.resize();
     }, 1000, true);
 
-    this.triggerScrollEvent = ionic.throttle(function() {
+    this.triggerScrollEvent = ionic.animationFrameThrottle(function() {
       ionic.trigger('scroll', {
         scrollTop: self.__scrollTop,
         scrollLeft: self.__scrollLeft,
