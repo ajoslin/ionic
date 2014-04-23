@@ -18,11 +18,15 @@
       </a>
     </ion-header-bar>
     <ion-content>
-      <ul class="list">
-        <li class="item" scroll-collection-repeat="i in items" scroll-item-size="52">
-          {{i}}
-        </li>
-      </ul>
+      <ion-refresher on-refresh="onRefresh()"></ion-refresher>
+      <div>
+        <div class="item"
+          ng-click="alert(item)"
+          scroll-item-repeat="item in items"
+          scroll-item-height="52">
+          {{item}}
+        </div>
+      </div>
     </ion-content>
   <script>
 function MainCtrl($scope, $ionicScrollDelegate) {
@@ -31,8 +35,50 @@ function MainCtrl($scope, $ionicScrollDelegate) {
     $scope.items.push('item '+i);
   }
 
+<<<<<<< Updated upstream
   $scope.scrollBottom = $ionicScrollDelegate.scrollBottom;
 }
   </script>
   </body>
+=======
+  $scope.height = function(n) {
+    return 105 + (n % 40);
+  };
+  $scope.width = function(n) {
+    return 105 + (n % 40);
+  };
+
+  $scope.alert = alert.bind(window);
+
+  $scope.onRefresh = function() {
+    $timeout(function() {
+      var len = $scope.items.length;
+      $scope.items.unshift(2999 - $scope.items.length);
+      $scope.items.unshift(2999 - $scope.items.length);
+      $scope.items.unshift(2999 - $scope.items.length);
+      $scope.items.unshift(2999 - $scope.items.length);
+      $scope.items.unshift(2999 - $scope.items.length);
+      $scope.items.unshift(2999 - $scope.items.length);
+      $scope.items.unshift(2999 - $scope.items.length);
+      $scope.items.unshift(2999 - $scope.items.length);
+      $scope.$broadcast('scroll.refreshComplete');
+    }, 1500);
+  };
+
+  $scope.scrollBottom = $ionicScrollDelegate.scrollBottom;
+}
+  </script>
+  <style>
+.item {
+  width: 100%;
+}
+.photo {
+  width: 105px;
+  height: 105px;
+  border: 1px solid black;
+  background-size: 103px 103px;
+  background-position: 1px 1px;
+}
+</body>
+>>>>>>> Stashed changes
 </html>
