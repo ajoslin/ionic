@@ -48,6 +48,7 @@
       //var value = easingMethod ? easingMethod(percent) : percent;
     },
     stop: function() {
+      this.onStop && this.onStop();
       this.isRunning = false;
       this.shouldEnd = true;
     },
@@ -94,7 +95,9 @@
         repeat: this.repeat,
         autoReverse: this.autoReverse,
         dynamic: this.dynamic
-      }
+      };
+
+      this.onStart && this.onStart();
 
       ionic.Animation.animationStarted(this);
 
@@ -104,6 +107,7 @@
         }
       }, function(droppedFrames, finishedAnimation) {
         ionic.Animation.animationStopped(self);
+        self.onComplete && self.onComplete();
         console.log('Finished anim:', droppedFrames, finishedAnimation);
       }, animState);
     },

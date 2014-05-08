@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>New Nav</title>
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="../../dist/css/ionic.css">
+  <script src="../../dist/js/ionic.bundle.js"></script>
+  <script src="app.js"></script>
+</head>
+<body ng-app="test" ng-controller="AppCtrl">
+
+<ion-nav-view-two></ion-nav-view-two>
+
+<script type="text/ng-template" id="1.html">
+  <ion-header-bar class="bar-positive">
+    <h1 class="title">Hello</h1>
+  </ion-header-bar>
+  <ion-content>
+    <input ng-model="one">
+    <br/>One: {{one}}
+  </ion-content>
+</script>
+<script type="text/ng-template" id="2.html">
+  <ion-header-bar class="bar-positive">
+    <h1 class="title">Hello</h1>
+  </ion-header-bar>
+  <ion-content>
+    <input ng-model="two">
+    <br/>Two: {{two}}
+  </ion-content>
+</script>
+
+</body>
+</html>
